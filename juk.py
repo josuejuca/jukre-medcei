@@ -11,7 +11,7 @@
 import argparse
 import os
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import win32serviceutil
 import win32service
 import requests
@@ -66,9 +66,11 @@ def last_json_lines(types=None, limit=50000):
 
 def human_ts(iso):
     try:
-        # mostra no horário local da máquina
+        # converte para UTC-3 (Brasília)
         dt = datetime.fromisoformat(iso.replace("Z", "+00:00"))
-        return dt.strftime("%d/%m/%Y %H:%M:%S")
+        br_tz = timezone(timedelta(hours=-3))
+        dt_br = dt.astimezone(br_tz)
+        return dt_br.strftime("%d/%m/%Y %H:%M:%S")
     except Exception:
         return iso
 
